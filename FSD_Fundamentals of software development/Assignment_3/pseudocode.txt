@@ -1,0 +1,558 @@
+
+
+SET user_List TO []
+
+
+
+DEFINE FUNCTION file_Read(choice):
+
+    # Reading Usernames and passwords from admin file into a list.
+
+    IF choice EQUALS 1:
+
+        SET f_Hand TO open("admin_File.txt", "r")
+
+    ELSE:
+
+        SET f_Hand TO open("customer_File.txt", "r")
+
+    FOR admin_Data IN f_Hand:
+
+        user_List.append(admin_Data)
+
+    f_Hand.close()
+
+    
+
+DEFINE FUNCTION file_Write(choice):
+
+    # Writing User name and Password from a list into file.
+
+    IF choice EQUALS 1:
+
+        SET f_Hand TO open("admin_File.txt", "w")
+
+    ELSE:
+
+        SET f_Hand TO open("customer_File.txt", "w")
+
+    FOR Data IN user_List:
+
+        f_Hand.write(Data)
+
+    f_Hand.close()
+
+    SET user_list TO []
+
+
+
+DEFINE FUNCTION register(choice):
+
+    # Registering new User as Admin or Customers
+
+    SET user TO INPUT('Create Username: ')
+
+    file_Read(choice)
+
+    IF (user+'\n') IN user_List:
+
+        OUTPUT ("That user already exist")
+
+        RETURN False
+
+    ELSE:
+
+        user_List.append(user + '\n')
+
+        SET password TO INPUT('Create Password: ')
+
+        user_List.append(password + '\n')
+
+        file_Write(choice)
+
+        RETURN True
+
+
+
+DEFINE FUNCTION login(choice):
+
+    # Login Portal FOR User as Admin or Customers
+
+    SET user TO INPUT('Enter User:\t ')
+
+    file_Read(choice)
+
+    IF (user+'\n') IN user_List:
+
+        SET password TO INPUT('Enter password:\t ')
+
+        # Position of Password is checked as IF it is next to user name access is given IF statement is True
+
+        IF ((password+'\n') IN user_List) and (password+'\n' EQUALS user_List[user_List.index(user+'\n')+1]):
+
+            IF choice EQUALS 1:
+
+                admin()
+
+            ELSE:
+
+                customer()
+
+        ELSE:
+
+            OUTPUT("Password incorrect!")
+
+        RETURN False
+
+    ELSE:
+
+        OUTPUT("User Invalid!")
+
+        RETURN True
+
+
+
+DEFINE FUNCTION car():
+
+    SET car_List TO []
+
+
+
+    # Reading cars from file into a list
+
+    SET f_Hand TO open("car.txt", "r")
+
+    FOR cars IN f_Hand:
+
+        car_List.append(cars)
+
+    f_Hand.close()
+
+
+
+    # Admin can Modify cars' data.
+
+    OUTPUT("Enter < 1 > to view all cars.\nEnter < 2 > to add a new car.\nEnter < 3 > to update car details.")
+
+    SET choice TO int(INPUT("Enter < 4 > to Delete Car. \nEnter < 5 > FOR any other option to exit: \nOption:\t")) 
+
+
+
+    IF choice EQUALS 1:
+
+        # Print all the cars
+
+        FOR cars IN car_List:
+
+            OUTPUT(cars)
+
+        SET car_List TO []
+
+        
+
+    ELSEIF choice EQUALS 2:
+
+        # Add a new car
+
+        SET car_Num TO INPUT("Enter Car Number:- \t")
+
+        IF not(car_Num+'\n') IN car_List:
+
+            SET f_Hand TO open("car.txt", "w")
+
+            SET f_Hand_Avail TO open("availablecars.txt","w")
+
+            SET car_Name TO INPUT("Enter Car Name:- \t")
+
+            SET car_Color TO INPUT("Enter Car Color:- \t")
+
+            car_List.append(car_Num+'\n')
+
+            car_List.append(car_Name+'\n')
+
+            car_List.append(car_Color+'\n')
+
+            FOR cars IN car_List:
+
+                f_Hand.write(cars)
+
+                f_Hand_Avail.write(cars)
+
+            SET car_List TO []
+
+            f_Hand.close()
+
+            f_Hand_Avail.close()
+
+        ELSE:
+
+            OUTPUT ("\tCar already exist!!!")
+
+            
+
+    ELSEIF choice EQUALS 3:
+
+        # Modify existing car
+
+        SET car_Num TO INPUT("Enter Car Number:- \t")
+
+        IF (car_Num+'\n') IN car_List:
+
+            SET x TO car_List.index(car_Num+'\n')
+
+            SET car_Name TO INPUT("Enter Car Name to change  it:- \t")
+
+            SET car_Color TO INPUT("Enter Car Color to change it:- \t")
+
+            SET car_List[x] TO car_Num+'\n'
+
+            SET car_List[x+1] TO car_Name+'\n'
+
+            SET car_List[x+2] TO car_Color+'\n'
+
+            SET f_Hand TO open("car.txt", "w")
+
+            FOR cars IN car_List:
+
+                f_Hand.write(cars)
+
+            SET car_List TO []
+
+            f_Hand.close()
+
+    
+
+    ELSEIF choice EQUALS 4:
+
+        # Delete car
+
+        SET car_Num TO INPUT("Enter Car Number:- \t")
+
+        IF (car_Num+'\n') IN car_List:
+
+            SET x TO car_List.index(car_Num+'\n')
+
+            car_List.pop(x)
+
+            car_List.pop(x+1)
+
+            car_List.pop(x+2)
+
+            SET f_Hand TO open("car.txt", "w")
+
+            FOR cars IN car_List:
+
+                f_Hand.write(cars)
+
+            SET car_List TO []
+
+            f_Hand.close()  
+
+    ELSE:
+
+        f_Hand.close()
+
+        exit()
+
+    f_Hand.close()
+
+    
+
+DEFINE FUNCTION avilable_Car():
+
+    OUTPUT("display available car list")
+
+    SET f_Hand_Avail TO open("availablecars.txt", "r")
+
+    FOR cars IN f_Hand_Avail:
+
+        OUTPUT(cars)
+
+    f_Hand_Avail.close()
+
+
+
+DEFINE FUNCTION booked_Car():
+
+    SET car_List TO []
+
+    SET f_Hand TO open("bookedcars.txt", "r")
+
+    FOR cars IN f_Hand:
+
+        car_List.append(cars)
+
+    f_Hand.close()
+
+    SET car_Num TO INPUT("Enter car number to find booked car:\t")
+
+    IF (car_Num+'\n') IN car_List:
+
+        SET x TO car_List.index(car_Num+'\n')
+
+        SET car_Name TO INPUT("Enter Car Name to change  it:- \t")
+
+        SET car_Color TO INPUT("Enter Car Color to change it:- \t")
+
+        OUTPUT(car_List[x])
+
+        OUTPUT(car_List[x+1])
+
+        OUTPUT(car_List[x+2])    
+
+
+
+DEFINE FUNCTION RETURN_Car():
+
+    SET car_List TO []
+
+    SET car_Num TO INPUT("Enter Car Number:- \t")
+
+    car_List.append(car_Num)
+
+    SET car_Name TO INPUT("Enter Car Name to change  it:- \t")
+
+    car_List.append(car_Name)
+
+    SET car_Color TO INPUT("Enter Car Color to change it:- \t")
+
+    car_List.append(car_Color)
+
+    # Add RETURNed car back to available cars.
+
+    SET f_Hand TO open("availablecars.txt", "w")
+
+    FOR cars IN car_List:
+
+        f_Hand.write(cars)
+
+    SET car_List TO []
+
+    f_Hand.close()
+
+
+
+DEFINE FUNCTION book_Car(): 
+
+    car_List= []
+
+    SET f_Hand_Avail TO open("availablecars.txt", "r")
+
+    FOR cars IN f_Hand_Avail:
+
+        car_List.append(cars)
+
+    f_Hand_Avail.close()
+
+    SET car_Num TO INPUT("Enter car number from list to book the car:\t")
+
+    # remove the booked car from available cars.  
+
+    IF (car_Num+'\n') IN car_List:
+
+        SET x TO car_List.index(car_Num+'\n')
+
+        car_List.pop(x)
+
+        car_List.pop(x+1)
+
+        car_List.pop(x+2)
+
+        SET f_Hand TO open("availablecars.txt", "w")
+
+        FOR cars IN car_List:
+
+            f_Hand.write(cars)
+
+        SET car_List TO []
+
+        f_Hand.close()
+
+
+
+        # Adding payment to payment file 
+
+        SET data_List TO []
+
+        SET f_Hand2 TO open("customer_Payment.txt", "w")
+
+        SET c_Id TO INPUT("Enter customer Id:\t")
+
+        data_List.append(c_Id)
+
+        SET Payment TO INPUT("Enter Payment:\t")
+
+        data_List.append(Payment)
+
+        SET time TO INPUT("Enter Time")
+
+        data_List.append(time)
+
+        FOR data IN data_list:
+
+            f_Hand2.write(data)
+
+        f_Hand2.close()
+
+        SET data_List TO []
+
+    ELSE:
+
+        OUTPUT("Car not found")
+
+        
+
+DEFINE FUNCTION customer_Payment():
+
+    # Checking specific customer payment
+
+    SET data_List TO []
+
+    SET f_Hand TO open("customer_Payment.txt", "r")
+
+    FOR data IN f_Hand:
+
+        data_List.append(data)
+
+    SET c_Id TO INPUT("To check payments. \nEnter customer Id:\t")
+
+    IF (c_Id+'\n') IN data_List:
+
+        SET x TO car_List.index(car_Num+'\n')
+
+        OUTPUT(data_List[x])
+
+        OUTPUT(data_List[x+1])
+
+              
+
+    SET data_List TO []
+
+    f_Hand.close()    
+
+
+
+DEFINE FUNCTION time_duration():
+
+    # Checking specific customer payment
+
+    SET data_List TO []
+
+    SET f_Hand TO open("customer_Payment.txt", "r")
+
+    FOR data IN f_Hand:
+
+        data_List.append(data)
+
+    SET time TO INPUT("To check booking. \nEnter time:\t")
+
+    IF (time+'\n') IN data_List:
+
+        SET x TO car_List.index(car_Num+'\n')
+
+        OUTPUT(data_List[x-2])
+
+        OUTPUT(data_List[x-1])
+
+        OUTPUT(data_list[x])      
+
+    SET data_List TO []
+
+    f_Hand.close()   
+
+
+
+    
+
+DEFINE FUNCTION admin():
+
+    OUTPUT("Enter < 1 > to Modify car details. \nEnter < 2 > to view available cars.")
+
+    OUTPUT("Enter < 3 > to Customer Payment FOR a specific time duration.")
+
+    OUTPUT("Enter < 4 > to Search FOR Specific Car Booking. \nEnter < 5 > Specific Customer Payment")
+
+    OUTPUT("Enter < 6 > to Retun a Rented Car. \nEnter < 7 > or any other option to Exit.")
+
+    SET choice TO int(INPUT("Enter the Choice:\t"))
+
+    IF choice EQUALS 1:
+
+        car()
+
+    ELSEIF choice EQUALS 2:
+
+        avilable_Car()
+
+    ELSEIF choice EQUALS 3:
+
+        time_duration()
+
+    ELSEIF choice EQUALS 4:
+
+        booked_Car()
+
+    ELSEIF choice EQUALS 5:
+
+        customer_Payment()
+
+    ELSEIF choice EQUALS 6:
+
+        RETURN_Car()
+
+    ELSE:
+
+        exit()
+
+    
+
+    
+
+DEFINE FUNCTION customer():
+
+    OUTPUT("Enter < 1 > View details of cars to be rented out.")
+
+    OUTPUT("Enter < 2 > Select and Book a car.")
+
+    OUTPUT("Enter < 3 > or any other option to exit.")
+
+    SET choice TO int(INPUT("Choice:\t"))
+
+    IF choice EQUALS 1:
+
+        avilable_Car()
+
+    ELSEIF choice EQUALS 2:
+
+        book_Car()
+
+    ELSE:
+
+        exit()
+
+
+
+OUTPUT(("Enter < 1 > to register. \nEnter < 2 > to  Login."))
+
+SET option TO int(INPUT("Enter < 3 > to Check Avilable cars \nEnter < 4 > or any other option to exit. \nOption:\t"))
+
+IF option EQUALS 1:
+
+    SET reg_Choice TO int(INPUT("Enter < 1 > FOR Admin Register. \nEnter < 2 > FOR Customer Register. \nchoice: \t"))
+
+    register(reg_Choice)
+
+ELSEIF option EQUALS 2:
+
+    SET login_Choice TO int(INPUT("Enter < 1 > FOR Admin Login. \nEnter < 2 > FOR Customer Login. \nchoice: \t"))
+
+    login(login_Choice)
+
+ELSEIF option EQUALS 3:
+
+    avilable_Car()
+
+ELSE:
+
+    exit()
+

@@ -1,0 +1,6 @@
+drink,pepsi,1
+drink,coke,2
+drink,fanta,3
+food,naan,4
+food,paratha,5
+alpha,zazanc,5
