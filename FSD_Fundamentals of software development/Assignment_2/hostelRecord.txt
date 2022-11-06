@@ -1,0 +1,7 @@
+Name:  bfbrf
+Apartment Type:  b
+Internet Subscribed:  yes
+Room Type:  single
+Apartment No:  34
+Room No:  0
+
