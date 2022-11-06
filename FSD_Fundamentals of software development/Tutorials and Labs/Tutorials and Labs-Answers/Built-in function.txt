@@ -1,0 +1,7 @@
+.append()
+.insert()
+.extend()
+.tolower()
+.toupper()
+range()
+len()

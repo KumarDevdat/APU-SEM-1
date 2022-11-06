@@ -1,0 +1,906 @@
+#Devdat Kumar
+
+#TP058340
+
+DEFINE FUNCTION menu():
+
+    OUTPUT("\n\n-------------UNIVERSITY STUDENT APARTMENT MANAGEMENT SYSTEM-------------\n")
+
+    WHILE True:
+
+        OUTPUT("\n" + "-"* 72 + "\n \nEnter 1 to assign apartment to the student. \nEnter 2 to search FOR student details.")
+
+        OUTPUT("Enter 3 to checkout")
+
+        OUTPUT("Enter 4 to find the total funds collected.\nEnter 5 to setup detabase as empty, all the rooms empty with no student.")
+
+        OUTPUT("Enter 6 to Exit.")
+
+        SET choice TO int(INPUT("\n\tEnter the number from given options:\t"))
+
+        IF choice EQUALS 1:
+
+            apt_Available()
+
+        ELSEIF choice EQUALS 2:
+
+            search_Details()
+
+        ELSEIF choice EQUALS 3:
+
+            checkout()
+
+        ELSEIF choice EQUALS 4:
+
+            SET a TO 0
+
+            SET b TO 0
+
+            SET y, x TO total_payment(a,b)
+
+            OUTPUT("\nTotal rental collected:", x)
+
+            OUTPUT("total amount collected:", y)
+
+            SET z TO y - x
+
+            OUTPUT("Total deposit collected:", z)          
+
+        ELSEIF choice EQUALS 5:
+
+            WHILE True:
+
+                SET sure TO INPUT("Do you want to reset/setup all the data, <yes> or <no>:\t")
+
+                IF sure EQUALS 'yes':
+
+                    apt_New()
+
+                    break
+
+                ELSEIF sure EQUALS 'no':
+
+                    break
+
+                ELSE:
+
+                    OUTPUT("You Entered wrong option")
+
+                    continue 
+
+        ELSEIF choice EQUALS 6:
+
+            exit()    
+
+        ELSE:
+
+            OUTPUT("\n\t\tYou Entered wrong option\n " + "\t\t" + "-" * 24 + "\n")
+
+            OUTPUT()
+
+            continue
+
+
+
+        continue
+
+
+
+DEFINE FUNCTION apt_New():
+
+    
+
+    SET data_List_1 TO []
+
+    SET room_Stat TO 0 
+
+    FOR i IN range(100):    
+
+        data_List_1.append(room_Stat)    
+
+    SET file_1 TO open("Apartment_Available.txt",'w')
+
+    FOR data_1 IN data_List_1:
+
+        file_1.write(str(data_1) + '\n')
+
+    file_1.close()
+
+
+
+    SET data_List_2 TO []
+
+    SET amount TO 0
+
+    FOR j IN range(3):    
+
+        data_List_2.append(amount)
+
+    SET file_2 TO open("Funds_collected.txt",'w')
+
+    FOR data_2 IN data_List_2:
+
+        file_2.write(str(data_2) + '\n')
+
+    file_2.close()
+
+
+
+    SET file_3 TO open("student_Record.txt",'w')
+
+    file_3.close()
+
+    
+
+    SET file_4 TO open("Checkouts.txt",'w')
+
+    file_4.close()
+
+    
+
+    OUTPUT("\nNew file is created, with data of all empty rooms, with no student.")
+
+    OUTPUT("New funds file is created, with no fund's data.")
+
+    OUTPUT("New student Record file is created with no student's data.")
+
+    OUTPUT("Checkout student Record file is created with no student's data.")
+
+
+
+    
+
+DEFINE FUNCTION apt_Available():
+
+    OUTPUT("-" * 80)
+
+    OUTPUT("\n\n There are 2 types of Apartments available.\n\n Type A: 2 Single Rooms   -(RM 400/- per single room)-, Kitchen & Laundry.\n Type B: 1 Master Bedroom -(RM 500/- per master room)-, only Laundry,\n\t 2 Single Rooms   -(RM 300/- per single room)-, Kitchen & Laundry.")
+
+    OUTPUT("\n Type A: Internet(Optional) FOR RM 50/- \n Type B: Internet(Optional) FOR RM 40/- \n\n") 
+
+    OUTPUT("-" * 80)
+
+    OUTPUT("\n")
+
+    WHILE True:
+
+        SET apt_Type TO str(INPUT("Enter Room Type <A> or <B>:\t")).upper()
+
+        IF apt_Type EQUALS 'A' or apt_Type EQUALS 'B':
+
+            IF apt_Type EQUALS 'B':
+
+                SET apt_Type TO str(INPUT("Enter Room Type <S> or <M>:\t")).upper()
+
+                IF apt_Type EQUALS 'S':
+
+                    SET apt_Type TO 'B'
+
+                ELSEIF apt_Type EQUALS 'M':
+
+                    SET apt_Type TO 'C'
+
+                ELSE:
+
+                    OUTPUT("You Entered wrong option")
+
+                    continue  
+
+            SET j, count, apt_Num, room_Num TO std_assign(apt_Type)  
+
+            IF count != 0:
+
+                OUTPUT("Currently there are:", count, " free rooms available IN Type ", apt_Type ," Apartments")
+
+                SET x TO apt_Assign(j,apt_Type, apt_Num, room_Num)
+
+                break
+
+            ELSE:
+
+                OUTPUT("Currently there are no rooms available IN Type ", apt_Type ," Apartments, please try other type.")
+
+                continue
+
+        ELSE:
+
+            OUTPUT("You Entered wrong option")
+
+            continue
+
+    
+
+        
+
+DEFINE FUNCTION apt_Assign(j,apt_Type, apt_Num, room_Num):
+
+    WHILE True:
+
+        SET net TO INPUT("Do you want to subscribe FOR Internet connection, <yes> or <no>:\t")
+
+        IF net EQUALS 'yes' or net EQUALS 'no':
+
+            break
+
+        ELSE:
+
+            OUTPUT("You Entered wrong option")
+
+            continue
+
+    SET std_Name TO INPUT("Enter your name:\t").lower()
+
+    SET tp_Num TO INPUT("Enter your Tp number:\t")
+
+    SET r TO 0
+
+    SET f_R TO 0
+
+    SET t_Type TO 'T'
+
+    SET r_Type TO 'R'
+
+    SET OUTPUT("\nYou are assigned Apartment type ", apt_Type," apartment number ",apt_Num," room number ", room_Num,"\n Internet connection TO ?", net)    
+
+    SET price_Deposit TO 100
+
+    SET amount, pay_Type, remain, full_Rent TO payment_Type(apt_Type, net, r,f_R)
+
+    SET price_Rental TO amount - price_Deposit
+
+    SET y TO total_payment(price_Deposit, price_Rental)
+
+    SET std_Record TO std_Rec(j,apt_Type, apt_Num, room_Num, net, std_Name, tp_Num, pay_Type, amount,r_Type,remain,t_Type,full_Rent)    
+
+    
+
+        
+
+DEFINE FUNCTION std_assign(option):
+
+
+
+    SET file TO open("Apartment_Available.txt",'r')
+
+    SET data TO file.read().splitlines()
+
+    file.close()
+
+
+
+    SET count TO 0
+
+    SET count_A TO 0
+
+    SET count_B TO 0
+
+    SET count_C TO 0
+
+    SET count_New TO 0
+
+    SET count_Total_A TO 40
+
+    SET count_Total_B TO 40
+
+    SET count_Total_C TO 20
+
+    SET data_List TO []
+
+    
+
+    FOR x IN data:
+
+        SET count TO count + 1
+
+        SET a TO int(x)
+
+        IF a EQUALS 0:
+
+            IF count <= count_Total_A:
+
+                SET count_A TO count_A + 1
+
+            ELSEIF count <= count_Total_A + count_Total_B:
+
+                SET count_B TO count_B + 1
+
+            ELSEIF count <= count_Total_A + count_Total_B + count_Total_C:
+
+                SET count_C TO count_C + 1
+
+        data_List.append(a)
+
+        
+
+    
+
+    IF option EQUALS 'A':
+
+        SET count_New TO count_A
+
+    ELSEIF option EQUALS 'B':
+
+        SET count_New TO count_B
+
+    ELSEIF option EQUALS 'C':
+
+        SET count_New TO count_C
+
+            
+
+        
+
+    FOR i IN range(count_New):
+
+        IF option EQUALS 'A':
+
+            SET j TO i 
+
+        ELSEIF option EQUALS 'B':
+
+            SET j TO i + count_Total_A
+
+        ELSEIF option EQUALS 'C':
+
+            SET j TO i + count_Total_A + count_Total_B
+
+        IF data_List[j] EQUALS 0:
+
+            SET data_List[j] TO 1
+
+            IF data_List[j] EQUALS 1:
+
+                SET apt_Num TO (int(j / 2) + 1)
+
+                IF j % 2 EQUALS 0:
+
+                    SET room_Num TO 1
+
+                    break
+
+                ELSE:
+
+                    SET room_Num TO 2
+
+                    break
+
+    
+
+    SET file TO open("Apartment_Available.txt",'w')
+
+    FOR data_New IN data_List:
+
+        file.write(str(data_New) + '\n')
+
+    file.close()
+
+
+
+    RETURN int(j),int(count_New), int(apt_Num), int(room_Num)
+
+
+
+DEFINE FUNCTION payment_Type(apt_Type, net,left_Amount,t_amount):
+
+    WHILE True:
+
+        SET total_Amount, price_Deposit TO payment(apt_Type,net)
+
+        
+
+        OUTPUT("Payment FOR five months contract: ")
+
+        SET OUTPUT("  your are chaged: ", ((total_Amount - price_Deposit)/5)," x  5 TO ", (total_Amount - price_Deposit),"\n \t\t\tDeposit TO ", price_Deposit,"\n \t\t","-" * 25,"  \n \t\t\t  Total TO ",total_Amount)
+
+        
+
+        SET pay_Type TO str(INPUT("do you want to pay, 'full <f> payment' or 'partial <p> payment'\n Enter f or p: "))
+
+        IF pay_Type EQUALS 'f':
+
+            SET amount_Pay TO total_Amount
+
+            OUTPUT("please pay RM:", amount_Pay)
+
+            SET amount TO int(INPUT("pay:\t"))
+
+            IF amount EQUALS amount_Pay:
+
+                SET remain TO 0
+
+                RETURN amount, pay_Type, remain, total_Amount
+
+            ELSE:
+
+                OUTPUT("You did not pay the exact same amount, please pay again")
+
+                continue
+
+
+
+        ELSEIF pay_Type EQUALS 'p':
+
+            OUTPUT("you will be charged minimum 50% of your rental fess FOR five months agreement and RM 100 FOR deposit as first installment") 
+
+            SET amount_Pay TO int((int(total_Amount)) - int(price_Deposit)) / 2 + int(price_Deposit)
+
+            OUTPUT("please pay: RM", int(amount_Pay))
+
+            SET amount TO int(INPUT("pay:\t"))
+
+            IF amount >= amount_Pay:
+
+                SET remain TO total_Amount - amount
+
+                OUTPUT("please pay remaining RM",remain," at least RM",remain/4," every month FOR next 4 months\n\tThankyou!")
+
+                RETURN amount, pay_Type, remain, total_Amount
+
+            ELSE:
+
+                OUTPUT("You did not pay the exact same amount, please pay again")
+
+                continue        
+
+        ELSE:
+
+            OUTPUT("You Entered wrong option")
+
+            continue
+
+
+
+DEFINE FUNCTION payment(apt_Type,internet):
+
+    
+
+    SET month TO 5
+
+    SET price_Deposit TO 100
+
+    SET total_Deposit TO 0
+
+    SET total_Price_Room TO 0
+
+    IF apt_Type EQUALS 'A':
+
+        SET price_Room TO 400
+
+        IF internet EQUALS 'yes':
+
+            SET price_Net TO 50
+
+        ELSE:
+
+            SET price_Net TO 0
+
+    ELSEIF apt_Type EQUALS 'B' or apt_Type EQUALS 'C':
+
+        IF internet EQUALS 'yes':
+
+            SET price_Net TO 40
+
+        ELSE:
+
+            SET price_Net TO 0
+
+        IF apt_Type EQUALS 'B':
+
+            SET price_Room TO 300
+
+        ELSEIF apt_Type EQUALS 'C':
+
+            SET price_Room TO 500
+
+            
+
+    
+
+    SET total_Payment TO ((price_Room * month) + price_Deposit + price_Net)
+
+    RETURN int(total_Payment), int(price_Deposit)
+
+
+
+DEFINE FUNCTION total_payment(price_Deposit,price_Rental):
+
+    SET file_X TO open("Funds_collected.txt",'r')
+
+    SET data TO file_X.read().splitlines()
+
+    SET count TO 0
+
+    FOR x IN data:
+
+        SET count TO count + 1
+
+        SET value TO int(x)
+
+        IF count EQUALS 1:
+
+            SET total_Deposit TO value
+
+        ELSEIF count EQUALS 2:
+
+            SET total_Rental TO value
+
+        ELSEIF count EQUALS 3:
+
+            SET total TO int(value)
+
+    file_X.close()
+
+    
+
+    SET total_Deposit_New TO total_Deposit + price_Deposit
+
+    SET total_Rental_New TO total_Rental + price_Rental
+
+    SET total_New TO total_Deposit_New + total_Rental_New
+
+    
+
+    SET amount TO []
+
+    amount.append(total_Deposit_New)
+
+    amount.append(total_Rental_New)
+
+    amount.append(total_New)
+
+    
+
+    SET file TO open("Funds_collected.txt",'w')
+
+    FOR data_New IN amount:
+
+        file.write(str(data_New) + '\n')
+
+    file.close()
+
+    RETURN total, total_Rental
+
+
+
+
+
+DEFINE FUNCTION payment_Update(sattle_Refund):
+
+    SET file_X TO open("Funds_collected.txt",'r')
+
+    SET data TO file_X.read().splitlines()
+
+    SET count TO 0
+
+    FOR x IN data:
+
+        SET count TO count + 1
+
+        SET value TO int(x)
+
+        IF count EQUALS 1:
+
+            SET total_Deposit TO value
+
+        ELSEIF count EQUALS 2:
+
+            SET total_Rental TO value
+
+        ELSEIF count EQUALS 3:
+
+            SET total TO int(value)
+
+    file_X.close()
+
+    
+
+    SET total_Deposit_New TO total_Deposit - 100
+
+    SET total_Rental_New TO ((total_Rental - sattle_Refund) + 100)
+
+    SET total_New TO total_Deposit_New + total_Rental_New
+
+    
+
+    SET amount TO []
+
+    amount.append(total_Deposit_New)
+
+    amount.append(total_Rental_New)
+
+    amount.append(total_New)
+
+    
+
+    SET file TO open("Funds_collected.txt",'w')
+
+    FOR data_New IN amount:
+
+        file.write(str(data_New) + '\n')
+
+    file.close()
+
+    RETURN total
+
+    
+
+DEFINE FUNCTION std_Rec(j,apt_Type, apt_Num, room_Num, net, std_Name, tp_Num, pay_Type, amount,r_Type,remain,t_Type,full_Rent):
+
+
+
+    SET file_Handler TO open("student_Record.txt",'a')
+
+    SET k TO int(j) + 1
+
+    SET data_List TO []
+
+    data_List.append(k)
+
+    data_List.append(apt_Type)
+
+    data_List.append(apt_Num)
+
+    data_List.append(room_Num)
+
+    data_List.append(net)
+
+    data_List.append(std_Name)
+
+    data_List.append(tp_Num)
+
+    data_List.append(pay_Type)
+
+    data_List.append(amount)
+
+    data_List.append(r_Type)
+
+    data_List.append(remain)
+
+    data_List.append(t_Type)
+
+    data_List.append(full_Rent)
+
+    data_List.append('\n')
+
+
+
+    FOR data IN data_List:
+
+        file_Handler.write(str(data))
+
+    file_Handler.close()
+
+
+
+DEFINE FUNCTION search_Details():
+
+    SET file TO open("student_Record.txt",'r')
+
+    SET std_Name TO str(INPUT("Enter your name:\t")).lower()
+
+    SET tp_Num TO INPUT("Enter your Tp number:\t")
+
+    FOR line IN file:
+
+        SET line TO line.rstrip()
+
+        IF not tp_Num IN line:
+
+            continue
+
+        OUTPUT("\n\t*** " + line + " ***")
+
+        
+
+    FOR line IN file:
+
+        SET line TO line.rstrip()
+
+        IF not std_Name IN line:
+
+            continue
+
+        OUTPUT("\n\t*** " + line + " ***")
+
+
+
+    file.close()
+
+
+
+
+
+DEFINE FUNCTION checkout():
+
+    SET lines TO []
+
+    SET count TO 0
+
+    SET value TO 0
+
+    SET file TO open("student_Record.txt",'r')
+
+    SET tp_Num TO INPUT("Enter your Tp number:\t")
+
+    FOR line IN file:
+
+        SET line TO line.rstrip()
+
+        lines.append(line)
+
+        SET count TO count + 1
+
+        IF not tp_Num IN line:
+
+            continue
+
+        OUTPUT("\n\t*** " + line + " ***")
+
+        SET x TO line
+
+
+
+    IF x[1] EQUALS 'A' or x[1] EQUALS 'B' or x[1] EQUALS 'C':
+
+        SET value TO int(x[0])
+
+    ELSEIF x[2] EQUALS 'A' or x[2] EQUALS 'B' or x[2] EQUALS 'C':
+
+        SET value TO int(x[0:2])
+
+    ELSE:
+
+        SET value TO int(x[0:3])
+
+
+
+    SET file_C_O TO open("Checkouts.txt",'a')
+
+    file_C_O.write(str(x) + '\n')
+
+    file_C_O.close()
+
+
+
+    FOR i IN range(count):
+
+        IF lines[i] EQUALS x:
+
+            SET lines[i] TO ''
+
+    SET file_Std_Rec TO open("student_Record.txt",'w')
+
+    FOR data_Update IN lines:
+
+        file_Std_Rec.write(str(data_Update) + '\n')
+
+    file_Std_Rec.close()
+
+        
+
+    
+
+    SET file_R TO open("Apartment_Available.txt",'r')
+
+    SET data_R TO file_R.read().splitlines()
+
+    file.close()
+
+    
+
+    SET data_List_R TO []
+
+    FOR room_Stat IN data_R:
+
+        SET a TO int(room_Stat)
+
+        data_List_R.append(a)
+
+            
+
+    IF data_List_R[value - 1] EQUALS 1:
+
+        SET data_List_R[value - 1] TO 0
+
+    
+
+    SET file TO open("Apartment_Available.txt",'w')
+
+    FOR data_New IN data_List_R:
+
+        file.write(str(data_New) + '\n')
+
+    file.close()
+
+
+
+    SET t_Amount TO 0
+
+    SET r_Amount TO 0
+
+    IF x[-5] EQUALS 'T':
+
+        SET t_Amount TO int(x[-4:-1]) * 10
+
+        IF x[-10] EQUALS 'R':
+
+            SET r_Amount TO int(x[-9:-6])
+
+        ELSEIF x[-9] EQUALS 'R':
+
+            SET r_Amount TO int(x[-8:-6])
+
+        ELSEIF x[-8] EQUALS 'R':
+
+            r_Amonut - int(x[-7:-6])
+
+            
+
+    ELSEIF x[-4] EQUALS 'T':
+
+        SET t_Amount TO int(x[-3:-1]) * 10
+
+        IF x[-8] EQUALS 'R':
+
+            SET r_Amount TO int(x[-7:-5])
+
+        ELSEIF x[-7] EQUALS 'R':
+
+            r_Amonut - int(x[-6:-5])
+
+        ELSEIF x[-6] EQUALS 'R':
+
+            r_Amonut - int(x[-5:-5])
+
+            
+
+    ELSEIF x[-3] EQUALS 'T':
+
+        t_Amonut - int(x[-2:-1]) * 10
+
+        IF x[-7] EQUALS 'R':
+
+            r_Amonut - int(x[-6:-5])
+
+        ELSEIF x[-6] EQUALS 'R':
+
+            r_Amonut - int(x[-5:-5])
+
+    SET total_Payed TO t_Amount - r_Amount
+
+    SET months TO INPUT("Enter the number of months lived:\t")
+
+    SET monthly_Rent TO t_Amount / 5
+
+    SET total_Payable TO float(monthly_Rent) * float(months)
+
+    SET sattle_Refund TO total_Payable - total_Payed
+
+    SET sattle TO 0
+
+    SET refund TO 0
+
+    IF sattle_Refund < 0:
+
+        SET sattle TO payment_Update(int(-1 * sattle_Refund))
+
+        OUTPUT("you will get ",(-1 * sattle_Refund))
+
+    ELSEIF sattle_Refund > 0:
+
+        SET refund TO payment_Update(int(sattle_Refund))
+
+        OUTPUT("Please pay ", sattle_Refund)
+
+        SET p_Remain TO INPUT("pay:\t")
+
+    ELSE:
+
+        OUTPUT("No sattle and Refund")
+
+               
+
+menu()
+
+            
+

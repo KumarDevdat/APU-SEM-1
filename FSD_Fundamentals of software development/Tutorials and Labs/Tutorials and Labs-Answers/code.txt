@@ -1,0 +1,39 @@
+PROGRAM Largest Arbitrary Number
+BEGIN
+ i = 1
+ print "Enter <enter> to continue OR Enter <-1> to End"
+ Read choice
+ DOWHILE choice != -1
+  Print "Enter number"
+  Read number[i]
+  number[0] = 0
+  IF number[i] > number[i-1] THEN
+   Largest_num = number[i]
+  EndIF
+  i = i + 1
+  print "Enter <enter> to continue OR Enter <-1> to End"
+  Read choice
+ ENDDO
+ Print "Largest number is", Largest_num
+ Print "It was ", i, " number"
+End  
+
+PROGRAM Smallest Arbitrary Number
+BEGIN
+ i = 1
+ print "Enter <enter> to continue OR Enter <-1> to End"
+ Read choice
+ DOWHILE choice != -1
+  Print "Enter number"
+  Read number[i]
+  number[0] = 0
+  IF number[i] < number[i-1] THEN
+   smallesh_num = number[i]
+  EndIF
+  i = i + 1
+  print "Enter <enter> to continue OR Enter <-1> to End"
+  Read choice
+ ENDDO
+ Print "smallest number is", smallest_num
+ Print "It was ", i, " number"
+End  

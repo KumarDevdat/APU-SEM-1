@@ -1,0 +1,21 @@
+PROGRAM Job_Interview
+BEGIN
+ Y = 1
+ N = 0
+ Print "Is qualified yes <Y OR no <N>
+ Read qlfy
+ Print "Is experience more than five years yes <Y> Or no <N>
+ Read exp 
+ Print "Is age more than thirty years yes <Y> OR no <N>
+ Read age
+ 1 = exp AND age AND qlfy
+ 1 = exp AND qlfy OR age 
+ c = exp + age + qlfy
+ d = exp + age + qlfy
+ e = exp + age + qlfy
+ f = exp + age + qlfy
+ g = exp + age + qlfy
+ h = exp + age + qlfy
+ i = exp + age + qlfy
+
+  

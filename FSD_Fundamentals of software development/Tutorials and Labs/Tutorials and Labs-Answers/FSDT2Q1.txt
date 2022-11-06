@@ -1,0 +1,28 @@
+PROGRAM Computer Supplies
+BEGIN
+ Print "<Enter> to continue OR Enter -1 to end"
+ Read entry
+ DOWHILE num != -1
+  Print "Enter day 1 to 10"
+  Read day
+  DOWHILE day >= 1 OR day <= 10
+   Print "Enter amount"
+   Read amount
+   IF amount > 1000 THEN
+    dis = 4
+   ELSE 
+    IF amount >= 500 AND amount < 1000 THEN
+     dis = 2
+    ELSE
+     IF amount < 500 THEN 
+      dis = 0
+     ENDIF
+    ENDIF
+   ENDIF
+   net_amount = amount - (amount * dis / 100)
+   Print ("Discounted price is ", net_amount)
+  ENDDO
+  Print "<Enter> to continue OR Enter -1 to end"
+  Read entry
+ ENDDO
+END
